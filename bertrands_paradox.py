@@ -11,15 +11,15 @@ def rectangular_coord() -> Tuple[float, float]:
     y = random.uniform(-1, 1)
     return x, y
 
-def polar_coord_midpoint():
+def polar_coord_midpoint() -> float:
     r = random.uniform(0, 1)
     return r
 
-def polar_coord_endpoints():
+def polar_coord_endpoints() -> float:
     alpha = random.uniform(0, 2*np.pi)
     return alpha
 
-def main(niters: int, mode: int) -> None:
+def main(niters: int, mode: int) -> float:
     res = 0
     true_iters = 0
     # the why behind the differences between methods are beautifully explained here
