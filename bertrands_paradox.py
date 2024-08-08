@@ -1,5 +1,5 @@
 import random
-from typing import Tuple
+from typing import Tuple, Union
 import numpy as np
 
 # Example 2.6 https://math.dartmouth.edu/~prob/prob/prob.pdf
@@ -19,7 +19,7 @@ def polar_coord_endpoints() -> float:
     alpha = random.uniform(0, 2*np.pi)
     return alpha
 
-def main(niters: int, mode: int) -> float:
+def main(niters: int, mode: int) -> Union[float, Tuple[float, int]]:
     res = 0
     true_iters = 0
     # the why behind the differences between methods are beautifully explained here
@@ -46,10 +46,10 @@ def main(niters: int, mode: int) -> float:
             case _:
                 raise ValueError
     
-    return res/true_iters if mode == 1 else res/niters
+    return (res/true_iters, true_iters) if mode == 1 else res/niters
 
 
 if __name__ == "__main__":
 
-    results = main(10000, mode=1)
+    results = main(10000, mode=3)
     print(results)
