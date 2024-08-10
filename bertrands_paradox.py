@@ -19,9 +19,18 @@ def polar_coord_endpoints() -> float:
     alpha = random.uniform(0, 2*np.pi)
     return alpha
 
-def main(niters: int, mode: int) -> Union[float, Tuple[float, int]]:
+def main(niters: int, 
+         mode: int,
+         enforce_niters: bool=True) -> Union[float, Tuple[float, int]]:
     res = 0
     true_iters = 0
+
+    # in case we choose mode of random chord drawing 1, some iterations will not produce a valid midpoint
+    # this line enforces that niters iterations are actually run
+    if mode == 1 and enforce_niters:
+        niters_true = niters
+        niters *= 99999999999999999 # basically infinite loop
+    
     # the why behind the differences between methods are beautifully explained here
     # https://www.uio.no/studier/emner/matnat/math/MAT4010/data/forelesningsnotater/w-bertrand-paradox-(probability).pdf
     for i in range(niters):
@@ -29,11 +38,14 @@ def main(niters: int, mode: int) -> Union[float, Tuple[float, int]]:
             case 1:
                 x, y = rectangular_coord()
                 if (x**2) + (y**2) > 1:
-                    # we are outside circle
+                    # we are outside circle, so next iter
                     continue
                 decision = (2 * np.sqrt((1 - ((x**2) + (y**2))))) > np.sqrt(3)
                 res += decision
                 true_iters += 1  
+                if enforce_niters and true_iters == niters_true:
+                    # we have reached the desired niters, so breaking out
+                    break
             case 2:
                 r = polar_coord_midpoint()
                 decision = (2 * np.sqrt(1 - (r**2))) > np.sqrt(3)
@@ -51,5 +63,5 @@ def main(niters: int, mode: int) -> Union[float, Tuple[float, int]]:
 
 if __name__ == "__main__":
 
-    results = main(10000, mode=3)
+    results = main(10000, mode=1, enforce_niters=False)
     print(results)
