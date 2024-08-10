@@ -6,13 +6,13 @@ import numpy as np
 # Note: the length of a chord is given by 2 * √(r^2 - d^2) where d is the line that
 # bisects the chord
 
-def rectangular_coord() -> Tuple[float, float]:
-    x = random.uniform(-1, 1) # actually, it doesn't matter if its [0, 1] or [-1, 1]
-    y = random.uniform(-1, 1)
+def rectangular_coord(radius: Union[int, float]) -> Tuple[float, float]:
+    x = random.uniform(-radius, radius) # actually, it doesn't matter if its [0, 1] or [-1, 1]
+    y = random.uniform(-radius, radius)
     return x, y
 
-def polar_coord_midpoint() -> float:
-    r = random.uniform(-1, 1) # it does not matter wether we choose between [0, 1] or [-1, 1] either
+def polar_coord_midpoint(radius: Union[int, float]) -> float:
+    r = random.uniform(-radius, radius) # it does not matter wether we choose between [0, 1] or [-1, 1] either
     return r
 
 # why does it not matter wether we choose x/y or r from [-1,1] or [0,1] uniforms?
@@ -28,14 +28,16 @@ def polar_coord_endpoints(trick: bool=True) -> float:
 
 def main(niters: int, 
          mode: int,
-         enforce_niters: bool=True) -> Union[float, Tuple[float, int]]:
+         enforce_niters: bool=True,
+         trick_mode_3: bool=True,
+         radius: Union[float, int]=1) -> Union[float, Tuple[float, int]]:
     res = 0
     true_iters = 0
 
     # in case we choose mode of random chord drawing 1, some iterations will not produce a valid midpoint
     # this line enforces that niters iterations are actually run
     if mode == 1 and enforce_niters:
-        niters_true = niters
+        niters_to_enforce = niters
         niters *= 99999999999999999 # basically infinite loop
     
     # the why behind the differences between methods are beautifully explained here
@@ -43,33 +45,32 @@ def main(niters: int,
     for i in range(niters):
         match mode:
             case 1:
-                x, y = rectangular_coord()
-                if (x**2) + (y**2) > 1:
+                x, y = rectangular_coord(radius=radius)
+                if np.sqrt((x**2) + (y**2)) > radius:
                     # we are outside circle, so next iter
                     continue
-                decision = (2 * np.sqrt((1 - ((x**2) + (y**2))))) > np.sqrt(3)
+                decision = (2 * np.sqrt(((radius**2) - ((x**2) + (y**2))))) > np.sqrt(3) * radius
                 res += decision
                 true_iters += 1  
-                if enforce_niters and true_iters == niters_true:
+                if enforce_niters and true_iters == niters_to_enforce:
                     # we have reached the desired niters, so breaking out
                     break
             case 2:
-                r = polar_coord_midpoint()
-                decision = (2 * np.sqrt(1 - (r**2))) > np.sqrt(3)
+                r = polar_coord_midpoint(radius)
+                decision = (2 * np.sqrt((radius**2) - (r**2))) > np.sqrt(3) * radius
                 res += decision
             case 3:
                 # trick controls wether beta is fixed at 0 angles (endpoint at coordinates [0, 1])
                 # or if it's randomly chosen same as alpha. To check whether it's the same
-                trick = True
-                alpha = polar_coord_endpoints(trick=trick)
-                if not trick:
+                alpha = polar_coord_endpoints(trick=trick_mode_3)
+                if not trick_mode_3:
                     alpha, beta = alpha
                     angle = np.abs(alpha - beta)
                     # from: https://www.quora.com/How-do-we-find-the-length-of-an-arc-from-its-end-points-and-the-chord-that-contains-it
-                    decision = (2 * 1 * np.sin(angle/2)) > np.sqrt(3)
+                    decision = (2 * radius * np.sin(angle/2)) > np.sqrt(3) * radius
                 else:
                     # as established in the original document
-                    decision = (np.sqrt(2 - 2 * np.cos(alpha))) > np.sqrt(3)
+                    decision = (np.sqrt((radius**2) + (radius**2) - (2 * radius * radius * np.cos(alpha)))) > np.sqrt(3) * radius
                 res += decision
 
             case _:
@@ -80,5 +81,5 @@ def main(niters: int,
 
 if __name__ == "__main__":
 
-    results = main(1000000, mode=3, enforce_niters=False)
+    results = main(1000000, mode=3, radius=1, trick_mode_3=True)
     print(results)
