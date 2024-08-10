@@ -7,12 +7,12 @@ import numpy as np
 # bisects the chord
 
 def rectangular_coord(radius: Union[int, float]) -> Tuple[float, float]:
-    x = random.uniform(-radius, radius) # actually, it doesn't matter if its [0, 1] or [-1, 1]
+    x = random.uniform(-radius, radius) # actually, it doesn't matter if its [0, radius] or [-radius, radius]
     y = random.uniform(-radius, radius)
     return x, y
 
 def polar_coord_midpoint(radius: Union[int, float]) -> float:
-    r = random.uniform(-radius, radius) # it does not matter wether we choose between [0, 1] or [-1, 1] either
+    r = random.uniform(-radius, radius) # it does not matter wether we choose between [0, radius] or [-radius, radius] either
     return r
 
 # why does it not matter wether we choose x/y or r from [-radius,radius] or [0,radius] uniforms?
