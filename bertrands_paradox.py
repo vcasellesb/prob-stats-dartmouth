@@ -12,11 +12,18 @@ def rectangular_coord() -> Tuple[float, float]:
     return x, y
 
 def polar_coord_midpoint() -> float:
-    r = random.uniform(0, 1)
+    r = random.uniform(-1, 1) # it does not matter wether we choose between [0, 1] or [-1, 1] either
     return r
 
-def polar_coord_endpoints() -> float:
+# why does it not matter wether we choose x/y or r from [-1,1] or [0,1] uniforms?
+# well, it's actually because their value does not matter until they are plugged in the bisector
+# length formula, which esentially squares them. Thus, the results you get from -0.5 are the same as from 0.5.
+
+def polar_coord_endpoints(trick: bool=True) -> float:
     alpha = random.uniform(0, 2*np.pi)
+    if not trick:
+        beta = random.uniform(0, 2*np.pi)
+        return alpha, beta
     return alpha
 
 def main(niters: int, 
@@ -51,17 +58,27 @@ def main(niters: int,
                 decision = (2 * np.sqrt(1 - (r**2))) > np.sqrt(3)
                 res += decision
             case 3:
-                alpha = polar_coord_endpoints()
-                decision = (np.sqrt(2 - 2 * np.cos(alpha))) > np.sqrt(3)
+                # trick controls wether beta is fixed at 0 angles (endpoint at coordinates [0, 1])
+                # or if it's randomly chosen same as alpha. To check whether it's the same
+                trick = True
+                alpha = polar_coord_endpoints(trick=trick)
+                if not trick:
+                    alpha, beta = alpha
+                    angle = np.abs(alpha - beta)
+                    # from: https://www.quora.com/How-do-we-find-the-length-of-an-arc-from-its-end-points-and-the-chord-that-contains-it
+                    decision = (2 * 1 * np.sin(angle/2)) > np.sqrt(3)
+                else:
+                    # as established in the original document
+                    decision = (np.sqrt(2 - 2 * np.cos(alpha))) > np.sqrt(3)
                 res += decision
 
             case _:
-                raise ValueError
+                raise ValueError(f'Invalid method for randomly drawing a chord. Choose from 1, 2 or 3. Got \'{mode}\'.')
     
     return (res/true_iters, true_iters) if mode == 1 else res/niters
 
 
 if __name__ == "__main__":
 
-    results = main(10000, mode=1, enforce_niters=False)
+    results = main(1000000, mode=3, enforce_niters=False)
     print(results)
