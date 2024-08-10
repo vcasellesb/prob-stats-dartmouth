@@ -15,7 +15,7 @@ def polar_coord_midpoint(radius: Union[int, float]) -> float:
     r = random.uniform(-radius, radius) # it does not matter wether we choose between [0, 1] or [-1, 1] either
     return r
 
-# why does it not matter wether we choose x/y or r from [-1,1] or [0,1] uniforms?
+# why does it not matter wether we choose x/y or r from [-radius,radius] or [0,radius] uniforms?
 # well, it's actually because their value does not matter until they are plugged in the bisector
 # length formula, which esentially squares them. Thus, the results you get from -0.5 are the same as from 0.5.
 
@@ -81,5 +81,8 @@ def main(niters: int,
 
 if __name__ == "__main__":
 
-    results = main(1000000, mode=3, radius=1, trick_mode_3=True)
+    results = main(1000000, 
+                   mode=2, 
+                   radius=1, 
+                   trick_mode_3=False)
     print(results)
