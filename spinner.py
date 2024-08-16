@@ -58,14 +58,13 @@ def plot(results: Dict[str, int], fig_path: str):
     # generate plot as asked
     # from: https://stackoverflow.com/questions/70477458/how-can-i-plot-bar-plots-with-variable-widths-but-without-gaps-in-python-and-ad
     x = list(results.keys())
-    cols = ['blue', 'red', 'grey']
     y_w_area = [get_height(convert_to_float(k), v) for k, v in results.items()]
     w = [convert_to_float(k) for k in results.keys()]
     xticks=[]
     for n, c in enumerate(w):
         xticks.append(sum(w[:n]) + w[n]/2)
 
-    a = plt.bar(xticks, height = y_w_area, width = w, alpha = 0.8, color=cols)
+    a = plt.bar(xticks, height = y_w_area, width = w, alpha = 0.8, color=list(results.keys()))
     _ = plt.xticks(xticks, x)
 
     plt.legend(a.patches, x)
