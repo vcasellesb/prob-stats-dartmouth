@@ -65,9 +65,8 @@ def plot(results: Dict[str, int], fig_path: str):
         xticks.append(sum(w[:n]) + w[n]/2)
 
     a = plt.bar(xticks, height = y_w_area, width = w, alpha = 0.8, color=list(results.keys()))
-    _ = plt.xticks(xticks, x)
+    _ = plt.xticks(xticks, [x_[:6] for x_ in x])
 
-    plt.legend(a.patches, x)
     plt.savefig(fig_path)
 
 def main(*bounds, NITERATIONS: int, fig_path: str, CIRCUMFERENCE: float) -> None:
@@ -78,4 +77,4 @@ if __name__ == "__main__":
     NITERATIONS = 1000000
     r = 1
     CIRCUMFERENCE = 2 * np.pi * r
-    main('1/3', '1/4', '1/5', '1/6', '1/20', NITERATIONS=NITERATIONS, fig_path='res_spinner.png', CIRCUMFERENCE=CIRCUMFERENCE)
+    main(1/3, 1/4, 1/5, 1/6, 1/20, NITERATIONS=NITERATIONS, fig_path='res_spinner.png', CIRCUMFERENCE=CIRCUMFERENCE)
