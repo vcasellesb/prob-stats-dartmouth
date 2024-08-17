@@ -1,29 +1,14 @@
 from typing import Dict
 import numpy as np
 import matplotlib.pyplot as plt
+from utils import convert_to_float
 
 # example 2.1 https://math.dartmouth.edu/~prob/prob/prob.pdf and exercise 1 (page 52)
 
 def between(x: float, lwr_bound: float, upr_bound: float) -> bool:
     return lwr_bound <= x < upr_bound
 
-def convert_to_float(frac_str: str):
-    try:
-        return float(frac_str)
-    except ValueError:
-        try:
-            num, denom = frac_str.split('/')
-        except ValueError:
-            return None
-        try:
-            leading, num = num.split(' ')
-        except ValueError:
-            return float(num) / float(denom)        
-        if float(leading) < 0:
-            sign_mult = -1
-        else:
-            sign_mult = 1
-        return float(leading) + sign_mult * (float(num) / float(denom))
+
     
 def get_height(width: float, p: float):
     # area = a*b
@@ -31,27 +16,27 @@ def get_height(width: float, p: float):
     return p / width
 
 
-def simulate(*bounds, CIRCUMFERENCE: float, NITERATIONS: int) -> Dict[str, int]:
+def simulate(*bounds, circumference: float, niterations: int) -> Dict[str, int]:
     bounds = [convert_to_float(b) for b in bounds]
     
     assert np.round(sum(bounds), 10) == 1, sum(bounds)
     if bounds[0] != 0:
         bounds = [0] + bounds
     ps = list(np.array(bounds[1:]))
-    bounds = sorted(list(np.cumsum(np.array(bounds) * CIRCUMFERENCE)), reverse=True)
+    bounds = sorted(list(np.cumsum(np.array(bounds) * circumference)), reverse=True)
     
     # initialize results
     results = {str(p): 0 for p in ps}
     
-    for _ in range(NITERATIONS):
-        x = np.random.uniform(0, 1) * CIRCUMFERENCE
+    for _ in range(niterations):
+        x = np.random.uniform(0, 1) * circumference
         for i, b in enumerate(bounds[1:]):
             this_p = str(ps[::-1][i])            
             if x > b:
                 results[this_p] += 1
                 break       
 
-    results = {k: v/NITERATIONS for k,v in results.items()}
+    results = {k: v/niterations for k,v in results.items()}
     return results
 
 def plot(results: Dict[str, int], fig_path: str):
@@ -69,12 +54,12 @@ def plot(results: Dict[str, int], fig_path: str):
 
     plt.savefig(fig_path)
 
-def main(*bounds, NITERATIONS: int, fig_path: str, CIRCUMFERENCE: float) -> None:
-    res = simulate(*bounds, CIRCUMFERENCE=CIRCUMFERENCE, NITERATIONS=NITERATIONS)
+def main(*bounds, niterations: int, fig_path: str, circumference: float) -> None:
+    res = simulate(*bounds, circumference=circumference, niterations=niterations)
     plot(res, fig_path)
 
 if __name__ == "__main__":
     NITERATIONS = 1000000
     r = 1
     CIRCUMFERENCE = 2 * np.pi * r
-    main(1/3, 1/4, 1/5, 1/6, 1/20, NITERATIONS=NITERATIONS, fig_path='res_spinner.png', CIRCUMFERENCE=CIRCUMFERENCE)
+    main(1/3, 1/4, 1/5, 1/6, 1/20, niterations=NITERATIONS, fig_path='res_spinner.png', circumference=CIRCUMFERENCE)
