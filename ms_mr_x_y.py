@@ -41,9 +41,13 @@ def main(z: Union[int, float],
     ax.plot(x, lw_bound(x, z))
     ax.plot(x, x*1, color='black')
     ax = generate_grid(ax, start, finish)
+    ax.fill_between(x, x - z, x + z, facecolor='C0', alpha=0.4)
     ax.set_xlim(min(x), max(x))
     ax.set_ylim(min(x), max(x))
-
+    probability_cdf = 1 - (1-z)**2
+    bbox = dict(boxstyle='round', fc='blanchedalmond', ec='orange', alpha=1)
+    rang = (finish - start)
+    plt.text(x = rang / 2 - rang * 1/20, y = (finish - start)/2, fontsize=10, s=f'P = {probability_cdf}', bbox=bbox)
     plt.savefig(f'mrs_xy_z_{str(z).replace(".", "_")}.png')
 
 if __name__ == "__main__":

@@ -1,4 +1,7 @@
 import numpy as np
+from typing import Union
+
+Number = Union[int, float]
 
 def convert_to_float(frac_str: str):
     try:
@@ -52,6 +55,7 @@ def gcd(a: int, b: int) -> int:
 
 def area_bar_graph():
     pass
+    
 
 if __name__ == "__main__":
     assert gcd(25, 10) == 5
