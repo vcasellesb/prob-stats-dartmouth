@@ -59,7 +59,8 @@ def area_bar_graph(areas: npt.ArrayLike,
                    ticks: npt.ArrayLike,
                    save_path: str,
                    widths: npt.ArrayLike = None,
-                   heights: npt.ArrayLike = None):
+                   heights: npt.ArrayLike = None,
+                   **kwargs_bar):
     
     assert len(areas) == len(ticks)
 
@@ -70,7 +71,7 @@ def area_bar_graph(areas: npt.ArrayLike,
     if heights is None:
         heights = [a/width for a in areas]
     
-    plt.bar(ticks, height=heights, width=widths)
+    plt.bar(ticks, height=heights, width=widths, **kwargs_bar)
     plt.savefig(save_path)
     
 

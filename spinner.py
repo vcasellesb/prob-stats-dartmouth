@@ -1,20 +1,17 @@
 from typing import Dict
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import convert_to_float
+from utils import convert_to_float, area_bar_graph
 
 # example 2.1 https://math.dartmouth.edu/~prob/prob/prob.pdf and exercise 1 (page 52)
 
 def between(x: float, lwr_bound: float, upr_bound: float) -> bool:
     return lwr_bound <= x < upr_bound
-
-
     
 def get_height(width: float, p: float):
     # area = a*b
     # we have area, which is p, and width
     return p / width
-
 
 def simulate(*bounds, circumference: float, niterations: int) -> Dict[str, int]:
     bounds = [convert_to_float(b) for b in bounds]
@@ -44,15 +41,14 @@ def plot(results: Dict[str, int], fig_path: str):
     # from: https://stackoverflow.com/questions/70477458/how-can-i-plot-bar-plots-with-variable-widths-but-without-gaps-in-python-and-ad
     x = list(results.keys())
     y_w_area = [get_height(convert_to_float(k), v) for k, v in results.items()]
-    w = [convert_to_float(k) for k in results.keys()]
-    xticks=[]
-    for n, c in enumerate(w):
-        xticks.append(sum(w[:n]) + w[n]/2)
+    widths = [convert_to_float(k) for k in results.keys()]
+    xticks = [sum(widths[:(n+1)]) for n in range(len(widths)-1)]
+    
+    xticks = [0] + xticks
+    print(xticks)
 
-    a = plt.bar(xticks, height = y_w_area, width = w, alpha = 0.8, color=list(results.keys()))
-    _ = plt.xticks(xticks, [x_[:6] for x_ in x])
-
-    plt.savefig(fig_path)
+    area_bar_graph(ticks=xticks, areas = list(results.values()), 
+                   heights=y_w_area, widths=widths, alpha=0.8, color=list(results.keys()), save_path=fig_path)
 
 def main(*bounds, niterations: int, fig_path: str, circumference: float) -> None:
     res = simulate(*bounds, circumference=circumference, niterations=niterations)
