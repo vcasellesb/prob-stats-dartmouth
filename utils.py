@@ -1,5 +1,7 @@
 import numpy as np
+import numpy.typing as npt
 from typing import Union
+import matplotlib.pyplot as plt
 
 Number = Union[int, float]
 
@@ -53,8 +55,23 @@ def gcd(a: int, b: int) -> int:
     
     return a
 
-def area_bar_graph():
-    pass
+def area_bar_graph(areas: npt.ArrayLike,
+                   ticks: npt.ArrayLike,
+                   save_path: str,
+                   widths: npt.ArrayLike = None,
+                   heights: npt.ArrayLike = None):
+    
+    assert len(areas) == len(ticks)
+
+    if widths is None:
+        width = ticks[1] - ticks[0]
+        assert all([ticks[i+1] - ticks[i] == width for i in range(1, len(ticks)-1)]), 'Widths are expected to be all of the same length'
+        widths = [width] * len(areas)
+    if heights is None:
+        heights = [a/width for a in areas]
+    
+    plt.bar(ticks, height=heights, width=widths)
+    plt.savefig(save_path)
     
 
 if __name__ == "__main__":

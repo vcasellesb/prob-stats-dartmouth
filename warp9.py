@@ -1,9 +1,13 @@
+from typing import List
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import Number
+from utils import Number, area_bar_graph
 
 
-def divide_sample_space(values, nsplits: Number = 10, max_ = None, min_ = None):
+def divide_sample_space(values: np.ndarray, 
+                        nsplits: Number = 10,
+                        max_ = None, 
+                        min_ = None):
     
     if max_ is None:
         max_ = max(values)
@@ -19,15 +23,15 @@ def divide_sample_space(values, nsplits: Number = 10, max_ = None, min_ = None):
     ticks = tmp_ticks[1:][::-1]
     return which_bins, ticks
 
-def area_bar_graph(bins: list, ticks: list, niters: int):
+def area_bar_graph_helper(bins: List, ticks: List, 
+                   niters: int, save_path: str):
+    
+    assert save_path.endswith('.png') # should we even check this?
+    
     res = dict((x, bins.count(x) / niters) for x in set(bins))
     areas = list(res.values())
 
-    width = ticks[1] - ticks[0] # assume equal width
-
-    heights = [a/width for a in areas]
-    plt.bar(ticks, height=heights, width=[width] * len(heights))
-    plt.savefig('res_warp9.png')
+    area_bar_graph(areas=areas, ticks=ticks, save_path=save_path)
 
 def simulate_xs_ys(lambd: Number, niters: int):
     rands = np.random.rand(niters)
@@ -47,5 +51,4 @@ if __name__ == "__main__":
 
     bins_y, ticks = divide_sample_space(ys, nsplits=10, max_=100, min_=0)
 
-    area_bar_graph(bins=bins_y, ticks=ticks, niters=10_000)
-   
+    area_bar_graph_helper(bins=bins_y, ticks=ticks, niters=10_000, save_path='res_warp9.png')
