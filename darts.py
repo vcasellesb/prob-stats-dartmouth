@@ -1,14 +1,14 @@
 import numpy as np
-from typing import Dict
+from typing import Dict, Tuple
 from utils import convert_to_float
 import matplotlib.pyplot as plt
 
 # example 2.9 https://math.dartmouth.edu/~prob/prob/prob.pdf
 
-def throw_dart(r: float=1.0):
+def throw_dart(r: float=1.0) -> Tuple[float, float, float]:
     
-    x = np.random.uniform(0, r)
-    y = np.random.uniform(0, r)
+    x = np.random.uniform(-r, r)
+    y = np.random.uniform(-r, r)
 
     pseudo_radius = np.sqrt((x**2) + (y**2))
     if pseudo_radius > r:
@@ -56,7 +56,52 @@ def plot(results: Dict[str, int],
 
     plt.savefig(fig_path)
 
+# exercise 4
+def exercise_4_solution(subradius: int = None, 
+                        radius: int = 10,
+                        section: str = 'a', 
+                        niters:int=100_000):
+    """
+    radius and subradius are in inches
+    """
+    res = 0
+    for _ in range(niters):
+        *_ , d = throw_dart(r=radius)
+        match section:
+            case 'a':
+                assert subradius
+                condition = d <= subradius
+            case 'b':
+                assert subradius
+                condition = d >= subradius
+            
+            case 'c':
+                x, y = _
+                condition = (x > 0 and y > 0)            
+            case 'd':
+                x, y = _
+                condition = (x > 0 and y > 0) and d >= subradius
+            case _:
+                raise NotImplementedError
+        if condition:
+            res+=1
+    res/=niters
+    return res
+
 if __name__ == "__main__":
+    res_a = exercise_4_solution(section='a', subradius=2)
+    assert np.round(res_a, 2) == 4/100, f'{res_a = }'
+
+    resb = exercise_4_solution(section='b', subradius=8)
+    assert np.round(resb, 2) == 9/25, np.round(resb, 2)
+
+    res_c = exercise_4_solution(section='c')
+    assert np.round(res_c, 2) == 1/4, f'{res_c = }'
+
+    res_d = exercise_4_solution(section='d', subradius=8)
+    assert np.round(res_d, 2) == 9 / 100, f'{res_d = }'
+
+    exit()    
 
     results, division = main(n_splits=10)
     print(results)
