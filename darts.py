@@ -67,7 +67,7 @@ def exercise_4_solution(subradius: int = None,
     res = 0
     for _ in range(niters):
         *_ , d = throw_dart(r=radius)
-        match section:
+        match section.lower():
             case 'a':
                 assert subradius
                 condition = d <= subradius
