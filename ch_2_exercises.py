@@ -3,20 +3,15 @@ import numpy as np
 def exercise_7(section: str, niters:int=10_000):
     bs = np.random.uniform(size=niters)
 
-
     match section:
         case 'a':
             return np.sum(np.logical_and(bs > 1/3, bs < 2/3)) / niters
-
         case 'b':
             return np.sum(np.abs(bs - 1/2) <= 1/4) / niters
-        
         case 'c':
             return np.sum(np.logical_or(bs < 1/4, 1-bs<1/4)) / niters
-        
         case 'd':
             return np.sum(3 * (bs**2) < bs) / niters
-    
         case _:
             raise NotImplementedError
 
