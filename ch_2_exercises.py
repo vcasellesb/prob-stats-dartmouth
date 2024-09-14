@@ -1,6 +1,8 @@
 import numpy as np
+from utils.densities import sample_exponential_density
+from utils.utils import area_bar_graph, Number
 
-def exercise_7(section: str, niters:int=10_000):
+def exercise_7(section: str, niters:int=10_000) -> float:
     bs = np.random.uniform(size=niters)
 
     match section:
@@ -16,7 +18,7 @@ def exercise_7(section: str, niters:int=10_000):
             raise NotImplementedError
         
 
-def exercise_8(section: str, niters: int=10_000) -> None:
+def exercise_8(section: str, niters: int=10_000) -> float:
     bs = np.random.uniform(size=niters)
     cs = np.random.uniform(size=niters)
 
@@ -51,6 +53,18 @@ def exercise_8(section: str, niters: int=10_000) -> None:
             raise NotImplementedError
         
     return np.sum(condition_array) / niters
+
+def exercise_9(lambda_: Number=1/10, niters: int=10_000):
+    times = sample_exponential_density(lambda_, size=niters)
+    repeats = np.sum(times < 100)
+
+    # this is unnecessary.
+    while repeats > 0:
+        tmp = sample_exponential_density(lambda_, size=repeats)
+        times[times < 100] = tmp
+        repeats = np.sum(times < 100)
+
+    return np.mean(times - 100)
 
 if __name__ == "__main__":
     tol_ = 0.05
@@ -103,3 +117,6 @@ if __name__ == "__main__":
     ex_8_i = exercise_8('i')
     should_be_ex_8_i = np.pi / 4
     assert np.abs(ex_8_i - should_be_ex_8_i) < tol_, f'{ex_8_i = }'
+
+    ex_9 = exercise_9()
+    assert np.abs(ex_9 - 10) < 0.1

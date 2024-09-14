@@ -1,7 +1,6 @@
 from typing import List
 import numpy as np
-import matplotlib.pyplot as plt
-from utils import Number, area_bar_graph
+from utils.utils import Number, area_bar_graph
 
 
 def divide_sample_space(values: np.ndarray, 
