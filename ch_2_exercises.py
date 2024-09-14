@@ -43,6 +43,10 @@ def exercise_8(section: str, niters: int=10_000) -> None:
             c2_1 = bs < 1/2 
             c2_2 = (1 - cs) < 1/2
             condition_array = np.logical_and.reduce((c1, c2_1, c2_2))
+        case 'h':
+            condition_array = (bs ** 2) + (cs ** 2) < 1/2
+        case 'i':
+            condition_array = ((bs - 1/2)**2) + ((cs - 1/2)**2) < 1/4
         case _:
             raise NotImplementedError
         
@@ -91,3 +95,11 @@ if __name__ == "__main__":
     ex_8_g = exercise_8('g')
     should_be_ex_8_g = 1/8
     assert np.abs(ex_8_g - should_be_ex_8_g) < tol_, f'{ex_8_g = }'
+
+    ex_8_h = exercise_8('h')
+    should_be_ex_8_h = np.pi / 8
+    assert np.abs(ex_8_h - should_be_ex_8_h) < tol_, f'{ex_8_h = }'
+
+    ex_8_i = exercise_8('i')
+    should_be_ex_8_i = np.pi / 4
+    assert np.abs(ex_8_i - should_be_ex_8_i) < tol_, f'{ex_8_i = }'
