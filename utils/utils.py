@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 Number = Union[int, float]
 
-def convert_to_float(frac_str: str):
+def convert_to_float(frac_str: str) -> float:
     try:
         return float(frac_str)
     except ValueError:
@@ -60,7 +60,7 @@ def area_bar_graph(areas: npt.ArrayLike,
                    save_path: str,
                    widths: npt.ArrayLike = None,
                    heights: npt.ArrayLike = None,
-                   **kwargs_bar):
+                   **kwargs_bar) -> None:
     
     assert len(areas) == len(ticks)
 
@@ -71,6 +71,7 @@ def area_bar_graph(areas: npt.ArrayLike,
     if heights is None:
         heights = [a/width for a in areas]
     
+    plt.figure()
     plt.bar(ticks, height=heights, width=widths, **kwargs_bar)
     plt.savefig(save_path)
     

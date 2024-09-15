@@ -1,7 +1,7 @@
 from typing import Dict
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import convert_to_float, area_bar_graph
+from utils.utils import convert_to_float, area_bar_graph
 
 # example 2.1 https://math.dartmouth.edu/~prob/prob/prob.pdf and exercise 1 (page 52)
 

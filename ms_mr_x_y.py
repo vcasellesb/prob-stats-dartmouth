@@ -31,7 +31,6 @@ def generate_grid(ax, start=0, finish=1,
 
     return ax
 
-
 def main(z: Union[int, float],
          start: Union[int, float]=0,
          finish: Union[int, float]=1):

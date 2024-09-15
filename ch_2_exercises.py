@@ -54,17 +54,25 @@ def exercise_8(section: str, niters: int=10_000) -> float:
         
     return np.sum(condition_array) / niters
 
-def exercise_9(lambda_: Number=1/10, niters: int=10_000):
+def exercise_9(lambda_: Number=1/10, niters: int=10_000) -> float:
     times = sample_exponential_density(lambda_, size=niters)
     repeats = np.sum(times < 100)
 
-    # this is unnecessary.
+    # this is unnecessary, but if we wanna simulate that we
+    # encounter the system at time 100, then it is (the results will be the same)
     while repeats > 0:
         tmp = sample_exponential_density(lambda_, size=repeats)
         times[times < 100] = tmp
         repeats = np.sum(times < 100)
 
     return np.mean(times - 100)
+
+def exercise_10():
+    # if we just sample from a [5, 15] uniform density, we will 
+    # never observe occurrences over 100...
+    times = np.random.uniform(low=5, high=15)
+    assert np.sum(times > 100) == 0
+    return
 
 if __name__ == "__main__":
     tol_ = 0.05
@@ -120,3 +128,5 @@ if __name__ == "__main__":
 
     ex_9 = exercise_9()
     assert np.abs(ex_9 - 10) < 0.1
+
+    ex_10 = exercise_10()

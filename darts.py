@@ -1,6 +1,6 @@
 import numpy as np
 from typing import Dict, Tuple
-from utils import convert_to_float
+from utils.utils import convert_to_float
 import matplotlib.pyplot as plt
 
 # example 2.9 https://math.dartmouth.edu/~prob/prob/prob.pdf
